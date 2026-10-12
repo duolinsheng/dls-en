@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duolingsheng · AI dialect tutor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gloock&family=Schibsted+Grotesk:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500&family=Noto+Serif+SC:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20261012-english" />
+    <script>
+      // Apply the saved theme early to avoid a flash
+      (function () {
+        try {
+          var t = localStorage.getItem("dls-ai-theme") || "auto";
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <h1>
+          <span class="brand-stamp" aria-hidden="true">省</span>
+          Duolingsheng
+        </h1>
+      </div>
+      <ul class="nav-menu">
+        <li><button class="nav-btn" data-page="home">Home</button></li>
+        <li><button type="button" class="nav-btn nav-onboarding-btn" data-onboarding-trigger>Tour</button></li>
+        <li><button class="nav-btn" data-page="chat">Tutor chat</button></li>
+        <li><button class="nav-btn" data-page="translate">Translate</button></li>
+        <li class="nav-group" data-group-pages="dictionary phrases daily quiz tones">
+          <button class="nav-btn nav-group-trigger" type="button" aria-haspopup="true">Learn</button>
+          <div class="nav-submenu">
+            <button class="nav-btn nav-subitem" data-page="dictionary">Dictionary</button>
+            <button class="nav-btn nav-subitem" data-page="phrases">Phrases</button>
+            <button class="nav-btn nav-subitem" data-page="daily">Phrase of the day</button>
+            <button class="nav-btn nav-subitem" data-page="quiz">Quiz</button>
+            <button class="nav-btn nav-subitem" data-page="tones">Tones</button>
+          </div>
+        </li>
+        <li class="nav-group" data-group-pages="wordbook favorites history achievement">
+          <button class="nav-btn nav-group-trigger" type="button" aria-haspopup="true">My library</button>
+          <div class="nav-submenu">
+            <button class="nav-btn nav-subitem" data-page="wordbook">Wordbook</button>
+            <button class="nav-btn nav-subitem" data-page="favorites">Favorites</button>
+            <button class="nav-btn nav-subitem" data-page="history">History</button>
+            <button class="nav-btn nav-subitem" data-page="achievement">Achievements</button>
+          </div>
+        </li>
+        <li id="navWorkspaceItem" hidden>
+          <button class="nav-btn" data-page="workspace" id="navWorkspaceBtn">Learning center</button>
+        </li>
+        <li><button type="button" class="nav-btn nav-theme-btn" id="navThemeBtn" title="Switch theme" aria-label="Switch theme">Theme</button></li>
+        <li><button class="nav-btn" data-page="settings">Settings</button></li>
+        <li class="nav-auth" id="navAuthGuest">
+          <button class="nav-btn nav-btn-cta" data-page="auth">Log in</button>
+        </li>
+        <li class="nav-auth nav-auth-user" id="navAuthUser" hidden>
+          <span id="navUserInfo" class="nav-user-info">
+            <span id="navUsername" class="nav-username"></span>
+            <span id="navUserRole" class="nav-role-badge"></span>
+          </span>
+          <button type="button" class="nav-btn nav-btn-logout" id="logoutBtn">Log out</button>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="app">
+      <!-- Home -->
+      <section id="page-home" class="page active">
+        <header class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">Personal dialect tutor</span>
+            <h1>Learn the language of home</h1>
+            <p>
+              Chat, translate and practice seven Asian regional dialects with a tutor that checks its
+              answers against a real dictionary.
+            </p>
+            <div class="hero-actions">
+              <button type="button" class="btn" onclick="navigateTo('chat')">Start learning</button>
+              <button type="button" class="btn secondary" onclick="navigateTo('translate')">Try the translator</button>
+            </div>
+            <button type="button" class="hero-onboarding-btn" data-onboarding-trigger>
+              First time here? Take the 2-minute tour
+            </button>
+          </div>
+          <div class="hero-stamps" aria-hidden="true">
+            <span class="stamp s-yue">粤</span>
+            <span class="stamp s-min">闽</span>
+            <span class="stamp s-hu">沪</span>
+            <span class="stamp s-chuan">川</span>
+          </div>
+        </header>
+
+        <div class="section-head">
+          <h2>Everything you need</h2>
+          <p>Pick a tool, or just start chatting.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card" onclick="navigateTo('chat')">
+            <div class="feature-icon">谈</div>
+            <h3>Tutor chat</h3>
+            <p>Ask questions in plain English and learn through conversation.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('translate')">
+            <div class="feature-icon">译</div>
+            <h3>Translator</h3>
+            <p>Mandarin and seven dialects, in both directions, with romanization.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('dictionary')">
+            <div class="feature-icon">典</div>
+            <h3>Dialect dictionary</h3>
+            <p>Look up words and hear how they sound.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('phrases')">
+            <div class="feature-icon">句</div>
+            <h3>Common phrases</h3>
+            <p>Greetings, food, shopping and more.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('daily')">
+            <div class="feature-icon">日</div>
+            <h3>Phrase of the day</h3>
+            <p>One useful phrase, every day.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('quiz')">
+            <div class="feature-icon">考</div>
+            <h3>Quizzes</h3>
+            <p>Check what you have learned.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('favorites')">
+            <div class="feature-icon">藏</div>
+            <h3>Favorites</h3>
+            <p>Keep the translations you want to remember.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('wordbook')">
+            <div class="feature-icon">词</div>
+            <h3>Wordbook</h3>
+            <p>Words you look up are collected automatically.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('achievement')">
+            <div class="feature-icon">章</div>
+            <h3>Achievements</h3>
+            <p>Earn badges and level up.</p>
+          </div>
+        </div>
+
+        <div class="daily-quote-section">
+          <h2 id="homeDailyTitle">Today's phrase</h2>
+          <div id="homeDailyQuote" class="daily-quote">
+            <div class="quote-content">
+              <p class="quote-yue" id="homeQuoteYue">Loading…</p>
+              <p class="quote-zh" id="homeQuoteZh"></p>
+              <p class="quote-pinyin" id="homeQuotePinyin"></p>
+            </div>
+            <button id="homePlayQuoteBtn" class="icon-btn" title="Play pronunciation" aria-label="Play pronunciation">Play</button>
+          </div>
+        </div>
+
+        <div class="progress-section">
+          <h2>Your progress</h2>
+          <div class="daily-checkin-section">
+            <button id="dailyCheckinBtn" class="btn btn-checkin">Check in today</button>
+            <span id="checkinStreak" class="checkin-streak">0-day streak</span>
+          </div>
+          <div class="daily-tasks-section">
+            <h3>Today's tasks</h3>
+            <div id="dailyTasksList" class="daily-tasks-list"></div>
+          </div>
+          <div class="progress-stats">
+            <div class="stat-card">
+              <div class="stat-icon">句</div>
+              <div class="stat-value" id="statPhrasesLearned">0</div>
+              <div class="stat-label">Phrases learned</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">考</div>
+              <div class="stat-value" id="statQuizCompleted">0</div>
+              <div class="stat-label">Quizzes finished</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">藏</div>
+              <div class="stat-value" id="statFavorites">0</div>
+              <div class="stat-label">Saved items</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">音</div>
+              <div class="stat-value" id="statAudioPlayed">0</div>
+              <div class="stat-label">Audio plays</div>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-label">
+              <span>Overall progress</span>
+              <span id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tutor chat -->
+      <section id="page-chat" class="page">
+        <div class="panel">
+          <h2>Tutor chat</h2>
+          <div class="chat-avatar">
+            <img src="assets/pictures/person/monster-pink.gif" alt="AI tutor" class="pixel-avatar" />
+          </div>
+          <div id="chatHistory" class="history"></div>
+          <p class="chat-safety-hint">
+            The tutor can look up words, make quizzes and share a phrase of the day. AI can be wrong, so confirm
+            important phrases with a native speaker.
+          </p>
+          <div class="composer">
+            <textarea
+              id="chatInput"
+              rows="3"
+              placeholder="Ask anything in English, for example: explain Cantonese grammar with simple examples."
+            ></textarea>
+            <button id="sendChat" class="btn">Send<span class="shortcut-hint">Ctrl+Enter</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Translate -->
+      <section id="page-translate" class="page">
+        <div class="panel">
+          <h2>Translate</h2>
+          <div class="translate-controls">
+            <label>
+              Direction
+              <select id="direction">
+                <option value="zh_to_yue">Mandarin → Cantonese</option>
+                <option value="yue_to_zh">Cantonese → Mandarin</option>
+                <option value="zh_to_taishanese">Mandarin → Taishanese</option>
+                <option value="taishanese_to_zh">Taishanese → Mandarin</option>
+                <option value="zh_to_minnan">Mandarin → Minnan</option>
+                <option value="minnan_to_zh">Minnan → Mandarin</option>
+                <option value="zh_to_hokkien">Mandarin → Hokkien</option>
+                <option value="hokkien_to_zh">Hokkien → Mandarin</option>
+                <option value="zh_to_shanghai">Mandarin → Shanghai dialect</option>
+                <option value="shanghai_to_zh">Shanghai dialect → Mandarin</option>
+                <option value="zh_to_shanghainese">Mandarin → Shanghainese</option>
+                <option value="shanghainese_to_zh">Shanghainese → Mandarin</option>
+                <option value="zh_to_teochew">Mandarin → Teochew</option>
+                <option value="teochew_to_zh">Teochew → Mandarin</option>
+                <option value="zh_to_wenzhounese">Mandarin → Wenzhounese</option>
+                <option value="wenzhounese_to_zh">Wenzhounese → Mandarin</option>
+                <option value="zh_to_sichuan">Mandarin → Sichuanese</option>
+                <option value="sichuan_to_zh">Sichuanese → Mandarin</option>
+              </select>
+            </label>
+          </div>
+          <textarea id="translateInput" rows="4" placeholder="Type or paste the text to translate…"></textarea>
+          <div class="translate-actions">
+            <button id="translateBtn" class="btn">Translate<span class="shortcut-hint">Ctrl+Enter</span></button>
+            <button id="clearTranslateBtn" class="btn secondary">Clear</button>
+          </div>
+          <div class="result">
+            <h3>Result</h3>
+            <div class="result-content">
+              <pre id="translateOutput"></pre>
+              <div class="result-actions">
+                <button id="speakOutputBtn" class="icon-btn" title="Listen" aria-label="Listen">Listen</button>
+                <button id="copyOutputBtn" class="icon-btn" title="Copy" aria-label="Copy">Copy</button>
+                <button id="favoriteOutputBtn" class="icon-btn" title="Save to favorites" aria-label="Save to favorites">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dictionary -->
+      <section id="page-dictionary" class="page">
+        <div class="panel">
+          <h2>Dialect dictionary</h2>
+          <div class="translate-controls">
+            <label>
+              Dialect
+              <select id="dictDialect">
+                <option value="yue">Cantonese</option>
+                <option value="taishanese">Taishanese</option>
+                <option value="minnan">Minnan</option>
+                <option value="hokkien">Hokkien</option>
+                <option value="shanghai">Shanghai dialect</option>
+                <option value="shanghainese">Shanghainese</option>
+                <option value="teochew">Teochew</option>
+                <option value="wenzhounese">Wenzhounese</option>
+                <option value="sichuan">Sichuanese</option>
+              </select>
+            </label>
+            <input type="text" id="yueDictSearch" placeholder="Search a word or character…" />
+            <button id="yueDictSearchBtn" class="btn">Search</button>
+          </div>
+          <div class="pronunciation-controls">
+            <label
+              >Audio speed
+              <select id="pronSpeed">
+                <option value="0.6">Slow</option>
+                <option value="1.0" selected>Normal</option>
+                <option value="1.5">Fast</option>
+              </select>
+            </label>
+            <label class="tts-fallback-label">
+              <input type="checkbox" id="useWebSpeechTTS" />
+              Use browser voice (fallback)
+            </label>
+          </div>
+          <div id="yueDictResult" class="yue-dict-result"></div>
+          <p id="noYueDictResult" class="no-data">Search for a word to see its entry.</p>
+        </div>
+      </section>
+
+      <!-- Favorites -->
+      <section id="page-favorites" class="page">
+        <div class="panel">
+          <h2>Favorites</h2>
+          <div class="favorites-category-bar">
+            <button class="fav-cat-btn active" data-favcat="all">All</button>
+            <button class="fav-cat-btn" data-favcat="翻译">Translations</button>
+            <button class="fav-cat-btn" data-favcat="短语">Phrases</button>
+            <button class="fav-cat-btn" data-favcat="每日一句">Phrase of the day</button>
+            <button class="fav-cat-btn" data-favcat="生词">Words</button>
+            <button class="fav-cat-btn" data-favcat="自定义">Custom</button>
+          </div>
+          <div class="favorites-list">
+            <div id="favoritesList" class="favorites-content"></div>
+            <p id="noFavorites" class="no-data">Nothing saved yet.</p>
+          </div>
+          <div class="favorites-actions">
+            <button id="clearFavoritesBtn" class="btn secondary">Clear favorites</button>
+            <button id="shareFavoritesBtn" class="btn">Share favorites</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Phrases -->
+      <section id="page-phrases" class="page">
+        <div class="panel">
+          <h2 id="phrasesTitle">Common phrases</h2>
+          <div class="translate-controls">
+            <label>
+              Dialect
+              <select id="phraseDialect">
+                <option value="yue">Cantonese</option>
+                <option value="taishanese">Taishanese</option>
+                <option value="minnan">Minnan</option>
+                <option value="hokkien">Hokkien</option>
+                <option value="shanghai">Shanghai dialect</option>
+                <option value="shanghainese">Shanghainese</option>
+                <option value="teochew">Teochew</option>
+                <option value="wenzhounese">Wenzhounese</option>
+                <option value="sichuan">Sichuanese</option>
+              </select>
+            </label>
+          </div>
+          <div class="phrase-categories">
+            <button class="phrase-cat-btn active" data-cat="greeting">Greetings</button>
+            <button class="phrase-cat-btn" data-cat="daily">Daily life</button>
+            <button class="phrase-cat-btn" data-cat="food">Food</button>
+            <button class="phrase-cat-btn" data-cat="shopping">Shopping</button>
+            <button class="phrase-cat-btn" data-cat="emotion">Feelings</button>
+          </div>
+          <div id="phraseList" class="phrase-list"></div>
+        </div>
+      </section>
+
+      <!-- Phrase of the day -->
+      <section id="page-daily" class="page">
+        <div class="panel">
+          <h2 id="dailyTitle">Phrase of the day</h2>
+          <div class="translate-controls">
+            <label>
+              Dialect
+              <select id="dailyDialect">
+                <option value="yue">Cantonese</option>
+                <option value="taishanese">Taishanese</option>
+                <option value="minnan">Minnan</option>
+                <option value="hokkien">Hokkien</option>
+                <option value="shanghai">Shanghai dialect</option>
+                <option value="shanghainese">Shanghainese</option>
+                <option value="teochew">Teochew</option>
+                <option value="wenzhounese">Wenzhounese</option>
+                <option value="sichuan">Sichuanese</option>
+              </select>
+            </label>
+          </div>
+          <div id="dailyQuote" class="daily-quote-large">
+            <div class="quote-content">
+              <p class="quote-yue" id="dailyQuoteYue">Loading…</p>
+              <p class="quote-zh" id="dailyQuoteZh"></p>
+              <p class="quote-pinyin" id="dailyQuotePinyin"></p>
+            </div>
+            <div class="quote-actions">
+              <button id="dailyPlayQuoteBtn" class="icon-btn" title="Play pronunciation" aria-label="Play pronunciation">Play</button>
+              <button id="dailyNextQuoteBtn" class="btn">Next phrase</button>
+              <button id="dailyFavoriteQuoteBtn" class="icon-btn" title="Save to favorites" aria-label="Save to favorites">Save</button>
+            </div>
+          </div>
+          <div class="custom-quote-section">
+            <h3>Add your own phrase</h3>
+            <div class="custom-quote-form">
+              <input type="text" id="customQuoteYue" placeholder="Phrase in the dialect" />
+              <input type="text" id="customQuoteZh" placeholder="Mandarin or English meaning" />
+              <input type="text" id="customQuotePinyin" placeholder="Romanization (for example: nei5 hou2)" />
+              <button id="addCustomQuoteBtn" class="btn">Add</button>
+            </div>
+            <div id="customQuotesList" class="custom-quotes-list"></div>
+          </div>
+          <div class="daily-history">
+            <h3>Earlier phrases</h3>
+            <div id="dailyHistoryList" class="daily-history-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quiz -->
+      <section id="page-quiz" class="page">
+        <div class="panel">
+          <h2 id="quizTitle">Dialect quiz</h2>
+          <div id="quizContainer" class="quiz-container">
+            <div id="quizStart" class="quiz-start">
+              <p id="quizIntro">Ready to test your dialect?</p>
+              <div class="quiz-options">
+                <select id="quizDialect">
+                  <option value="yue">Cantonese</option>
+                  <option value="taishanese">Taishanese</option>
+                  <option value="minnan">Minnan</option>
+                  <option value="hokkien">Hokkien</option>
+                  <option value="shanghai">Shanghai dialect</option>
+                  <option value="shanghainese">Shanghainese</option>
+                  <option value="teochew">Teochew</option>
+                  <option value="wenzhounese">Wenzhounese</option>
+                  <option value="sichuan">Sichuanese</option>
+                </select>
+                <select id="quizDifficulty">
+                  <option value="easy">Easy</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+              <div class="quiz-mode-buttons">
+                <button id="startQuizBtn" class="btn">Built-in questions</button>
+                <button id="startAIQuizBtn" class="btn btn-ai">AI-made questions</button>
+              </div>
+              <div id="quizScore" class="quiz-score"></div>
+            </div>
+            <div id="quizQuestion" class="quiz-question" style="display: none">
+              <div class="question-header">
+                <span id="questionCounter">Question 1/10</span>
+                <span id="currentScore">Score: 0</span>
+              </div>
+              <h3 id="questionText"></h3>
+              <div id="questionOptions" class="question-options"></div>
+              <div id="questionFeedback" class="question-feedback"></div>
+              <button id="nextQuestionBtn" class="btn" style="display: none">Next question</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tones -->
+      <section id="page-tones" class="page">
+        <div class="panel">
+          <h2>Cantonese tones</h2>
+          <div class="tone-intro">
+            <p>
+              Cantonese has six basic tones (nine if you count the entering tones). The same syllable means
+              different things in different tones.
+            </p>
+          </div>
+          <div class="tone-visual-chart">
+            <h3>Pitch contours</h3>
+            <canvas id="toneChart" width="500" height="280"></canvas>
+          </div>
+          <div class="tone-grid">
+            <div class="tone-card" data-tone="1">
+              <div class="tone-number">1</div>
+              <div class="tone-name">High level</div>
+              <div class="tone-example">
+                <div class="yue">诗</div>
+                <div class="pinyin">si1</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si1" aria-label="Play tone 1">Play</button>
+            </div>
+            <div class="tone-card" data-tone="2">
+              <div class="tone-number">2</div>
+              <div class="tone-name">High rising</div>
+              <div class="tone-example">
+                <div class="yue">史</div>
+                <div class="pinyin">si2</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si2" aria-label="Play tone 2">Play</button>
+            </div>
+            <div class="tone-card" data-tone="3">
+              <div class="tone-number">3</div>
+              <div class="tone-name">Mid level</div>
+              <div class="tone-example">
+                <div class="yue">试</div>
+                <div class="pinyin">si3</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si3" aria-label="Play tone 3">Play</button>
+            </div>
+            <div class="tone-card" data-tone="4">
+              <div class="tone-number">4</div>
+              <div class="tone-name">Low falling</div>
+              <div class="tone-example">
+                <div class="yue">时</div>
+                <div class="pinyin">si4</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si4" aria-label="Play tone 4">Play</button>
+            </div>
+            <div class="tone-card" data-tone="5">
+              <div class="tone-number">5</div>
+              <div class="tone-name">Low rising</div>
+              <div class="tone-example">
+                <div class="yue">市</div>
+                <div class="pinyin">si5</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si5" aria-label="Play tone 5">Play</button>
+            </div>
+            <div class="tone-card" data-tone="6">
+              <div class="tone-number">6</div>
+              <div class="tone-name">Low level</div>
+              <div class="tone-example">
+                <div class="yue">是</div>
+                <div class="pinyin">si6</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si6" aria-label="Play tone 6">Play</button>
+            </div>
+          </div>
+          <div class="tone-practice-section">
+            <h3>Tone drill: listen and pick</h3>
+            <div id="tonePracticeGame" class="tone-practice-game">
+              <div class="game-start">
+                <p>Listen to the sound, then choose the right tone.</p>
+                <button id="startTonePracticeBtn" class="btn">Start drill</button>
+              </div>
+              <div id="toneQuestion" class="tone-question" style="display: none">
+                <div class="tone-question-header">
+                  <span id="toneQuestionCounter">Question 1/10</span>
+                  <span id="toneScore">Score: 0</span>
+                </div>
+                <button id="playToneBtn" class="play-tone-btn">Play sound</button>
+                <div id="toneOptions" class="tone-options"></div>
+                <div id="toneFeedback" class="tone-feedback"></div>
+                <button id="nextToneBtn" class="btn" style="display: none">Next question</button>
+              </div>
+            </div>
+          </div>
+          <div class="pronunciation-compare-section">
+            <h3>Compare your pronunciation</h3>
+            <p>Listen to the standard sound, then record yourself to compare.</p>
+            <div class="compare-controls">
+              <div class="compare-item">
+                <span>Standard</span>
+                <input type="text" id="comparePinyin" placeholder="Enter Jyutping (for example: nei5 hou2)" />
+                <button id="playStandardBtn" class="btn">Play standard</button>
+              </div>
+              <div class="compare-item">
+                <span>You</span>
+                <button id="startRecordBtn" class="btn btn-record">Start recording</button>
+                <button id="stopRecordBtn" class="btn btn-stop" style="display: none">Stop recording</button>
+                <button id="playRecordingBtn" class="btn" style="display: none">Play recording</button>
+              </div>
+            </div>
+            <div id="compareResult" class="compare-result"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Wordbook -->
+      <section id="page-wordbook" class="page">
+        <div class="panel">
+          <h2>Wordbook</h2>
+          <div class="wordbook-controls">
+            <div class="wordbook-filter">
+              <button class="wb-filter-btn active" data-wbfilter="all">All</button>
+              <button class="wb-filter-btn" data-wbfilter="new">New</button>
+              <button class="wb-filter-btn" data-wbfilter="learning">Learning</button>
+              <button class="wb-filter-btn" data-wbfilter="review">Due for review</button>
+              <button class="wb-filter-btn" data-wbfilter="mastered">Mastered</button>
+            </div>
+            <button id="startReviewBtn" class="btn btn-review">Start review</button>
+          </div>
+          <div id="wordbookList" class="wordbook-list"></div>
+          <p id="noWordbook" class="no-data">No words yet. Words you look up in the dictionary are added automatically.</p>
+          <div id="reviewModal" class="review-modal" style="display: none">
+            <div class="review-card">
+              <h3>Spaced review</h3>
+              <div id="reviewCardContent" class="review-card-content"></div>
+              <div class="review-card-actions">
+                <button id="reviewForgotBtn" class="btn btn-review-forgot">Forgot</button>
+                <button id="reviewVagueBtn" class="btn btn-review-vague">Fuzzy</button>
+                <button id="reviewRememberBtn" class="btn btn-review-remember">Remembered</button>
+                <button id="reviewEasyBtn" class="btn btn-review-easy">Easy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Achievements -->
+      <section id="page-achievement" class="page">
+        <div class="panel">
+          <h2>Achievements</h2>
+          <div class="achievement-level">
+            <div class="level-display">
+              <div class="level-icon" id="levelIcon">始</div>
+              <div class="level-info">
+                <h3 id="levelName">Beginner</h3>
+                <p id="levelDesc">Just starting your dialect journey</p>
+              </div>
+            </div>
+            <div class="level-progress">
+              <div class="level-xp-bar">
+                <div class="level-xp-fill" id="levelXpFill" style="width: 0%"></div>
+              </div>
+              <span id="levelXpText">0 / 100 XP</span>
+            </div>
+          </div>
+          <div class="achievement-badges">
+            <h3>Badges</h3>
+            <div id="badgeGrid" class="badge-grid"></div>
+          </div>
+          <div class="achievement-share">
+            <button id="shareAchievementBtn" class="btn">Share achievements</button>
+            <button id="exportReportBtn" class="btn secondary">Export learning report</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section id="page-history" class="page">
+        <div class="panel">
+          <h2>History</h2>
+          <div class="history-controls">
+            <button id="clearChatHistoryBtn" class="btn secondary">Clear chat history</button>
+            <button id="clearTranslateHistoryBtn" class="btn secondary">Clear translation history</button>
+          </div>
+          <div class="history-list">
+            <h3>Translation history</h3>
+            <div id="translateHistoryList" class="history-content"></div>
+            <p id="noTranslateHistory" class="no-data">No translations yet.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Log in / Sign up -->
+      <section id="page-auth" class="page">
+        <div class="panel auth-panel">
+          <h2>Your account</h2>
+          <p class="auth-hint">Log in to sync your favorites, wordbook and progress.</p>
+          <div class="auth-tabs">
+            <button type="button" id="authTabLogin" class="auth-tab active">Log in</button>
+            <button type="button" id="authTabRegister" class="auth-tab">Sign up</button>
+          </div>
+          <p id="authMessage" class="auth-message" hidden></p>
+          <div class="auth-oauth">
+            <button type="button" id="oauthGithubBtn" class="btn btn-oauth">Continue with GitHub</button>
+            <div class="auth-divider"><span>or</span></div>
+          </div>
+          <form id="loginForm" class="auth-form">
+            <label>
+              Username
+              <input id="loginUsername" type="text" autocomplete="username" placeholder="demo" required />
+            </label>
+            <label>
+              Password
+              <input id="loginPassword" type="password" autocomplete="current-password" placeholder="demo123" required />
+            </label>
+            <button type="submit" class="btn">Log in</button>
+            <small>Test account: demo / demo123</small>
+          </form>
+          <form id="registerForm" class="auth-form" hidden>
+            <label>
+              Username
+              <input id="registerUsername" type="text" autocomplete="username" placeholder="3–20 letters, numbers or underscores" required />
+            </label>
+            <label>
+              Display name (optional)
+              <input id="registerDisplayName" type="text" autocomplete="nickname" placeholder="How we should greet you" />
+            </label>
+            <fieldset class="auth-role-fieldset">
+              <legend>I am a…</legend>
+              <div class="auth-role-options">
+                <label class="auth-role-option">
+                  <input type="radio" name="registerRole" value="student" checked required />
+                  <span>Student</span>
+                </label>
+                <label class="auth-role-option">
+                  <input type="radio" name="registerRole" value="parent" required />
+                  <span>Parent</span>
+                </label>
+                <label class="auth-role-option">
+                  <input type="radio" name="registerRole" value="teacher" required />
+                  <span>Teacher</span>
+                </label>
+              </div>
+              <small>Admin accounts are set up by the system and cannot be created here.</small>
+            </fieldset>
+            <label>
+              Password
+              <input id="registerPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters" required />
+            </label>
+            <label>
+              Confirm password
+              <input id="registerPassword2" type="password" autocomplete="new-password" required />
+            </label>
+            <button type="submit" class="btn">Sign up</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Role workspace -->
+      <section id="page-workspace" class="page">
+        <div class="panel workspace-panel">
+          <h2 id="roleWorkspaceTitle">Learning center</h2>
+          <p class="auth-hint">Tools for learning, supervising, teaching and managing, depending on your role.</p>
+          <div id="roleWorkspaceContent" class="role-workspace-content">
+            <p class="ws-muted">Loading…</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section id="page-settings" class="page">
+        <div class="panel config-panel">
+          <h2>Tutor model</h2>
+          <div class="grid">
+            <label>
+              Connection
+              <select id="providerPreset">
+                <option value="ollama">Local Ollama</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="openai">OpenAI / compatible API</option>
+              </select>
+            </label>
+            <label class="config-file-label">
+              API config file
+              <div class="config-file-row">
+                <button type="button" id="uploadConfigBtn" class="btn secondary">Upload config file</button>
+                <button type="button" id="clearConfigKeyBtn" class="btn secondary">Clear key</button>
+                <button type="button" id="downloadConfigTemplateBtn" class="btn secondary">Download template</button>
+                <input type="file" id="configFileInput" accept=".json,application/json" hidden />
+              </div>
+              <span id="configKeyStatus" class="config-key-status">No API key set</span>
+            </label>
+            <label>
+              Base URL
+              <input
+                id="baseUrl"
+                type="text"
+                value="/api"
+                placeholder="/api, http://127.0.0.1:11434 or https://api.deepseek.com/v1"
+              />
+            </label>
+            <label>
+              Model
+              <div class="model-select-row">
+                <input id="model" type="text" value="qwen3.5:0.8b" placeholder="qwen3.5:0.8b" />
+                <select id="modelPreset">
+                  <option value="">Recommended models</option>
+                  <option value="qwen3.5:0.8b">qwen3.5:0.8b (recommended, light)</option>
+                  <option value="qwen2.5:0.5b">qwen2.5:0.5b (smallest, low memory)</option>
+                  <option value="qwen2.5:1.5b">qwen2.5:1.5b (small)</option>
+                  <option value="qwen2.5:3b">qwen2.5:3b (medium)</option>
+                  <option value="qwen2.5:7b">qwen2.5:7b (large)</option>
+                  <option value="gemma3:1b">gemma3:1b (Google, light)</option>
+                  <option value="gemma3:4b">gemma3:4b (Google, medium)</option>
+                  <option value="llama3.2:1b">llama3.2:1b (Meta, light)</option>
+                  <option value="llama3.2:3b">llama3.2:3b (Meta, medium)</option>
+                  <option value="phi4-mini">phi4-mini (Microsoft, light)</option>
+                  <option value="deepseek-chat">deepseek-chat (DeepSeek V3)</option>
+                  <option value="deepseek-reasoner">deepseek-reasoner (DeepSeek R1)</option>
+                </select>
+              </div>
+            </label>
+          </div>
+          <button id="saveConfig" class="btn">Save settings</button>
+          <small>
+            Run <code>node server.js</code> first and use <code>/api</code>. To talk to Ollama directly, use
+            <code>http://127.0.0.1:11434</code>. For DeepSeek, use <code>https://api.deepseek.com/v1</code> and upload a
+            JSON config file that contains your API key. Settings are stored only in this browser.
+          </small>
+          <div class="model-guide">
+            <h3 id="modelGuideTitle">Download a model</h3>
+            <p id="modelGuideHint">Run this command in a terminal:</p>
+            <div class="guide-code">
+              <code id="modelDownloadCmd">ollama pull qwen3.5:0.8b</code>
+              <button class="btn btn-sm" onclick="copyModelCmd()">Copy</button>
+            </div>
+            <p>Other handy commands:</p>
+            <div class="guide-code-list">
+              <div class="guide-code"><code>ollama list</code><span>See installed models</span></div>
+              <div class="guide-code"><code>ollama rm MODEL</code><span>Remove a model</span></div>
+              <div class="guide-code"><code>ollama serve</code><span>Start the Ollama service</span></div>
+            </div>
+            <p>Memory guide: 0.5b ≈ 512 MB | 1.5b ≈ 1.5 GB | 3b ≈ 2.5 GB | 7b ≈ 5 GB</p>
+          </div>
+          <div class="data-management">
+            <h3>Your data</h3>
+            <div class="data-actions">
+              <button id="exportAllDataBtn" class="btn">Export all data</button>
+              <button id="importDataBtn" class="btn secondary">Import data</button>
+              <input type="file" id="importDataFile" accept=".json" style="display: none" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div
+      id="onboardingModal"
+      class="onboarding-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboardingTitle"
+      hidden
+    >
+      <div class="onboarding-card">
+        <div class="onboarding-header">
+          <span class="onboarding-badge">Quick tour</span>
+          <button type="button" id="skipOnboardingBtn" class="onboarding-skip">Skip</button>
+        </div>
+        <div class="onboarding-step" data-onboarding-step="0">
+          <div class="onboarding-icon">家</div>
+          <h2 id="onboardingTitle">Welcome to Duolingsheng</h2>
+          <p>Learn the dialect you care about step by step, through chat, translation and practice.</p>
+        </div>
+        <div class="onboarding-step" data-onboarding-step="1" hidden>
+          <div class="onboarding-icon">设</div>
+          <h2>First, connect a model</h2>
+          <p>
+            Open Settings and choose a provider, a model and a connection address. With local Ollama, pick a model
+            you have already installed.
+          </p>
+        </div>
+        <div class="onboarding-step" data-onboarding-step="2" hidden>
+          <div class="onboarding-icon">谈</div>
+          <h2>Start with one question</h2>
+          <p>
+            Try “How do I say hello in Cantonese?” The tutor looks words up in the dictionary when it needs to and
+            suggests what to learn next.
+          </p>
+        </div>
+        <div class="onboarding-progress" aria-label="Tour progress">
+          <span class="active"></span><span></span><span></span>
+        </div>
+        <div class="onboarding-actions">
+          <button type="button" id="onboardingBackBtn" class="btn secondary" hidden>Back</button>
+          <button type="button" id="onboardingNextBtn" class="btn">Next</button>
+        </div>
+      </div>
+    </div>
+    <script src="./auth.js"></script>
+    <script src="./markdown.js"></script>
+    <script src="./app.js?v=20261012-english"></script>
+    <script src="./role-features.js"></script>
+  </body>
+</html>
