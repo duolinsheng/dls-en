@@ -1,0 +1,26 @@
+{
+  "name": "dle-en",
+  "version": "1.0.0",
+  "description": "The english version of duolinsheng(bruh)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "start": "concurrently \"npm run start --prefix frontend\" \"npm run start --prefix backend\"",
+    "install-all": "npm install && npm install --prefix frontend && npm install --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duolinsheng/dls-en.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/duolinsheng/dls-en/issues"
+  },
+  "homepage": "https://github.com/duolinsheng/dls-en#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
