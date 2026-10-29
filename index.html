@@ -1,0 +1,970 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="meta.title">Duolingsheng · AI dialect tutor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gloock&family=Schibsted+Grotesk:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500&family=Noto+Serif+SC:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20261029-i18n" />
+    <script>
+      // Apply the saved theme early to avoid a flash
+      (function () {
+        try {
+          var t = localStorage.getItem("dls-ai-theme") || "auto";
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <h1>
+          <span class="brand-stamp" aria-hidden="true">省</span>
+          <span data-i18n="brand.name">Duolingsheng</span>
+        </h1>
+      </div>
+      <ul class="nav-menu">
+        <li><button class="nav-btn" data-page="home" data-i18n="nav.home">Home</button></li>
+        <li><button type="button" class="nav-btn nav-onboarding-btn" data-onboarding-trigger data-i18n="nav.tour">Tour</button></li>
+        <li><button class="nav-btn" data-page="chat" data-i18n="nav.chat">Tutor chat</button></li>
+        <li><button class="nav-btn" data-page="translate" data-i18n="nav.translate">Translate</button></li>
+        <li class="nav-group" data-group-pages="dictionary phrases daily quiz tones">
+          <button class="nav-btn nav-group-trigger" type="button" aria-haspopup="true" data-i18n="nav.learn">Learn</button>
+          <div class="nav-submenu">
+            <button class="nav-btn nav-subitem" data-page="dictionary" data-i18n="nav.dictionary">Dictionary</button>
+            <button class="nav-btn nav-subitem" data-page="phrases" data-i18n="nav.phrases">Phrases</button>
+            <button class="nav-btn nav-subitem" data-page="daily" data-i18n="nav.daily">Phrase of the day</button>
+            <button class="nav-btn nav-subitem" data-page="quiz" data-i18n="nav.quiz">Quiz</button>
+            <button class="nav-btn nav-subitem" data-page="tones" data-i18n="nav.tones">Tones</button>
+          </div>
+        </li>
+        <li class="nav-group" data-group-pages="wordbook favorites history achievement">
+          <button class="nav-btn nav-group-trigger" type="button" aria-haspopup="true" data-i18n="nav.library">My library</button>
+          <div class="nav-submenu">
+            <button class="nav-btn nav-subitem" data-page="wordbook" data-i18n="nav.wordbook">Wordbook</button>
+            <button class="nav-btn nav-subitem" data-page="favorites" data-i18n="nav.favorites">Favorites</button>
+            <button class="nav-btn nav-subitem" data-page="history" data-i18n="nav.history">History</button>
+            <button class="nav-btn nav-subitem" data-page="achievement" data-i18n="nav.achievements">Achievements</button>
+          </div>
+        </li>
+        <li id="navWorkspaceItem" hidden>
+          <button class="nav-btn" data-page="workspace" id="navWorkspaceBtn" data-i18n="workspace.nav.student">Learning center</button>
+        </li>
+        <li><button type="button" class="nav-btn nav-theme-btn" id="navThemeBtn" title="Switch theme" aria-label="Switch theme" data-i18n-aria-label="theme.switch">Theme</button></li>
+        <li class="nav-locale">
+          <select
+            id="localeSelect"
+            class="nav-locale-select"
+            data-locale-select
+            title="Language"
+            aria-label="Language"
+            data-i18n-title="nav.language"
+            data-i18n-aria-label="nav.language"
+          ></select>
+        </li>
+        <li><button class="nav-btn" data-page="settings" data-i18n="nav.settings">Settings</button></li>
+        <li class="nav-auth" id="navAuthGuest">
+          <button class="nav-btn nav-btn-cta" data-page="auth" data-i18n="auth.login">Log in</button>
+        </li>
+        <li class="nav-auth nav-auth-user" id="navAuthUser" hidden>
+          <span id="navUserInfo" class="nav-user-info">
+            <span id="navUsername" class="nav-username"></span>
+            <span id="navUserRole" class="nav-role-badge"></span>
+          </span>
+          <button type="button" class="nav-btn nav-btn-logout" id="logoutBtn" data-i18n="auth.logout">Log out</button>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="app">
+      <!-- Home -->
+      <section id="page-home" class="page active">
+        <header class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow" data-i18n="home.eyebrow">Personal dialect tutor</span>
+            <h1 data-i18n="home.title">Learn the language of home</h1>
+            <p data-i18n="home.lead">
+              Chat, translate and practice seven Asian regional dialects with a tutor that checks its
+              answers against a real dictionary.
+            </p>
+            <div class="hero-actions">
+              <button type="button" class="btn" onclick="navigateTo('chat')" data-i18n="home.start">Start learning</button>
+              <button type="button" class="btn secondary" onclick="navigateTo('translate')" data-i18n="home.tryTranslator">Try the translator</button>
+            </div>
+            <button type="button" class="hero-onboarding-btn" data-onboarding-trigger data-i18n="home.tourCta">
+              First time here? Take the 2-minute tour
+            </button>
+          </div>
+          <div class="hero-stamps" aria-hidden="true">
+            <span class="stamp s-yue">粤</span>
+            <span class="stamp s-min">闽</span>
+            <span class="stamp s-hu">沪</span>
+            <span class="stamp s-chuan">川</span>
+          </div>
+        </header>
+
+        <div class="section-head">
+          <h2 data-i18n="home.featuresTitle">Everything you need</h2>
+          <p data-i18n="home.featuresLead">Pick a tool, or just start chatting.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card" onclick="navigateTo('chat')">
+            <div class="feature-icon">谈</div>
+            <h3 data-i18n="feature.chat.title">Tutor chat</h3>
+            <p data-i18n="feature.chat.desc">Ask questions in plain English and learn through conversation.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('translate')">
+            <div class="feature-icon">译</div>
+            <h3 data-i18n="feature.translate.title">Translator</h3>
+            <p data-i18n="feature.translate.desc">Mandarin and seven dialects, in both directions, with romanization.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('dictionary')">
+            <div class="feature-icon">典</div>
+            <h3 data-i18n="feature.dictionary.title">Dialect dictionary</h3>
+            <p data-i18n="feature.dictionary.desc">Look up words and hear how they sound.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('phrases')">
+            <div class="feature-icon">句</div>
+            <h3 data-i18n="feature.phrases.title">Common phrases</h3>
+            <p data-i18n="feature.phrases.desc">Greetings, food, shopping and more.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('daily')">
+            <div class="feature-icon">日</div>
+            <h3 data-i18n="feature.daily.title">Phrase of the day</h3>
+            <p data-i18n="feature.daily.desc">One useful phrase, every day.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('quiz')">
+            <div class="feature-icon">考</div>
+            <h3 data-i18n="feature.quiz.title">Quizzes</h3>
+            <p data-i18n="feature.quiz.desc">Check what you have learned.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('favorites')">
+            <div class="feature-icon">藏</div>
+            <h3 data-i18n="feature.favorites.title">Favorites</h3>
+            <p data-i18n="feature.favorites.desc">Keep the translations you want to remember.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('wordbook')">
+            <div class="feature-icon">词</div>
+            <h3 data-i18n="feature.wordbook.title">Wordbook</h3>
+            <p data-i18n="feature.wordbook.desc">Words you look up are collected automatically.</p>
+          </div>
+          <div class="feature-card" onclick="navigateTo('achievement')">
+            <div class="feature-icon">章</div>
+            <h3 data-i18n="feature.achievements.title">Achievements</h3>
+            <p data-i18n="feature.achievements.desc">Earn badges and level up.</p>
+          </div>
+        </div>
+
+        <div class="daily-quote-section">
+          <h2 id="homeDailyTitle">Today's phrase</h2>
+          <div id="homeDailyQuote" class="daily-quote">
+            <div class="quote-content">
+              <p class="quote-yue" id="homeQuoteYue">Loading…</p>
+              <p class="quote-zh" id="homeQuoteZh"></p>
+              <p class="quote-pinyin" id="homeQuotePinyin"></p>
+            </div>
+            <button
+              id="homePlayQuoteBtn"
+              class="icon-btn"
+              title="Play pronunciation"
+              aria-label="Play pronunciation"
+              data-i18n="common.play"
+              data-i18n-title="common.playPronunciation"
+              data-i18n-aria-label="common.playPronunciation"
+            >Play</button>
+          </div>
+        </div>
+
+        <div class="progress-section">
+          <h2 data-i18n="progress.title">Your progress</h2>
+          <div class="daily-checkin-section">
+            <button id="dailyCheckinBtn" class="btn btn-checkin" data-i18n="checkin.button">Check in today</button>
+            <span id="checkinStreak" class="checkin-streak">0-day streak</span>
+          </div>
+          <div class="daily-tasks-section">
+            <h3 data-i18n="tasks.title">Today's tasks</h3>
+            <div id="dailyTasksList" class="daily-tasks-list"></div>
+          </div>
+          <div class="progress-stats">
+            <div class="stat-card">
+              <div class="stat-icon">句</div>
+              <div class="stat-value" id="statPhrasesLearned">0</div>
+              <div class="stat-label" data-i18n="stats.phrasesLearned">Phrases learned</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">考</div>
+              <div class="stat-value" id="statQuizCompleted">0</div>
+              <div class="stat-label" data-i18n="stats.quizzesFinished">Quizzes finished</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">藏</div>
+              <div class="stat-value" id="statFavorites">0</div>
+              <div class="stat-label" data-i18n="stats.savedItems">Saved items</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">音</div>
+              <div class="stat-value" id="statAudioPlayed">0</div>
+              <div class="stat-label" data-i18n="stats.audioPlays">Audio plays</div>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-label">
+              <span data-i18n="progress.overall">Overall progress</span>
+              <span id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tutor chat -->
+      <section id="page-chat" class="page">
+        <div class="panel">
+          <h2 data-i18n="chat.title">Tutor chat</h2>
+          <div class="chat-avatar">
+            <img src="assets/pictures/person/monster-pink.gif" alt="AI tutor" data-i18n-alt="chat.avatarAlt" class="pixel-avatar" />
+          </div>
+          <div id="chatHistory" class="history"></div>
+          <p class="chat-safety-hint" data-i18n="chat.safetyHint">
+            The tutor can look up words, make quizzes and share a phrase of the day. AI can be wrong, so confirm
+            important phrases with a native speaker.
+          </p>
+          <div class="composer">
+            <textarea
+              id="chatInput"
+              rows="3"
+              placeholder="Ask anything in English, for example: explain Cantonese grammar with simple examples."
+              data-i18n-placeholder="chat.placeholder"
+            ></textarea>
+            <button id="sendChat" class="btn"><span data-i18n="chat.send">Send</span><span class="shortcut-hint">Ctrl+Enter</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Translate -->
+      <section id="page-translate" class="page">
+        <div class="panel">
+          <h2 data-i18n="translate.title">Translate</h2>
+          <div class="translate-controls">
+            <label>
+              <span data-i18n="translate.direction">Direction</span>
+              <select id="direction">
+                <option value="zh_to_yue">Mandarin → Cantonese</option>
+                <option value="yue_to_zh">Cantonese → Mandarin</option>
+                <option value="zh_to_taishanese">Mandarin → Taishanese</option>
+                <option value="taishanese_to_zh">Taishanese → Mandarin</option>
+                <option value="zh_to_minnan">Mandarin → Minnan</option>
+                <option value="minnan_to_zh">Minnan → Mandarin</option>
+                <option value="zh_to_hokkien">Mandarin → Hokkien</option>
+                <option value="hokkien_to_zh">Hokkien → Mandarin</option>
+                <option value="zh_to_shanghai">Mandarin → Shanghai dialect</option>
+                <option value="shanghai_to_zh">Shanghai dialect → Mandarin</option>
+                <option value="zh_to_shanghainese">Mandarin → Shanghainese</option>
+                <option value="shanghainese_to_zh">Shanghainese → Mandarin</option>
+                <option value="zh_to_teochew">Mandarin → Teochew</option>
+                <option value="teochew_to_zh">Teochew → Mandarin</option>
+                <option value="zh_to_wenzhounese">Mandarin → Wenzhounese</option>
+                <option value="wenzhounese_to_zh">Wenzhounese → Mandarin</option>
+                <option value="zh_to_sichuan">Mandarin → Sichuanese</option>
+                <option value="sichuan_to_zh">Sichuanese → Mandarin</option>
+              </select>
+            </label>
+          </div>
+          <textarea
+            id="translateInput"
+            rows="4"
+            placeholder="Type or paste the text to translate…"
+            data-i18n-placeholder="translate.placeholder"
+          ></textarea>
+          <div class="translate-actions">
+            <button id="translateBtn" class="btn"><span data-i18n="translate.button">Translate</span><span class="shortcut-hint">Ctrl+Enter</span></button>
+            <button id="clearTranslateBtn" class="btn secondary" data-i18n="common.clear">Clear</button>
+          </div>
+          <div class="result">
+            <h3 data-i18n="translate.result">Result</h3>
+            <div class="result-content">
+              <pre id="translateOutput"></pre>
+              <div class="result-actions">
+                <button
+                  id="speakOutputBtn"
+                  class="icon-btn"
+                  title="Listen"
+                  aria-label="Listen"
+                  data-i18n="common.listen"
+                  data-i18n-title="common.listen"
+                  data-i18n-aria-label="common.listen"
+                >Listen</button>
+                <button
+                  id="copyOutputBtn"
+                  class="icon-btn"
+                  title="Copy"
+                  aria-label="Copy"
+                  data-i18n="common.copy"
+                  data-i18n-title="common.copy"
+                  data-i18n-aria-label="common.copy"
+                >Copy</button>
+                <button
+                  id="favoriteOutputBtn"
+                  class="icon-btn"
+                  title="Save to favorites"
+                  aria-label="Save to favorites"
+                  data-i18n="common.save"
+                  data-i18n-title="common.saveToFavorites"
+                  data-i18n-aria-label="common.saveToFavorites"
+                >Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dictionary -->
+      <section id="page-dictionary" class="page">
+        <div class="panel">
+          <h2 data-i18n="dictionary.title">Dialect dictionary</h2>
+          <div class="translate-controls">
+            <label>
+              <span data-i18n="common.dialect">Dialect</span>
+              <select id="dictDialect" data-dialect-select>
+                <option value="yue">Cantonese</option>
+                <option value="taishanese">Taishanese</option>
+                <option value="minnan">Minnan</option>
+                <option value="hokkien">Hokkien</option>
+                <option value="shanghai">Shanghai dialect</option>
+                <option value="shanghainese">Shanghainese</option>
+                <option value="teochew">Teochew</option>
+                <option value="wenzhounese">Wenzhounese</option>
+                <option value="sichuan">Sichuanese</option>
+              </select>
+            </label>
+            <input type="text" id="yueDictSearch" placeholder="Search a word or character…" />
+            <button id="yueDictSearchBtn" class="btn" data-i18n="common.search">Search</button>
+          </div>
+          <div class="pronunciation-controls">
+            <label>
+              <span data-i18n="dictionary.audioSpeed">Audio speed</span>
+              <select id="pronSpeed">
+                <option value="0.6" data-i18n="dictionary.speed.slow">Slow</option>
+                <option value="1.0" selected data-i18n="dictionary.speed.normal">Normal</option>
+                <option value="1.5" data-i18n="dictionary.speed.fast">Fast</option>
+              </select>
+            </label>
+            <label class="tts-fallback-label">
+              <input type="checkbox" id="useWebSpeechTTS" />
+              <span data-i18n="dictionary.browserVoice">Use browser voice (fallback)</span>
+            </label>
+          </div>
+          <div id="yueDictResult" class="yue-dict-result"></div>
+          <p id="noYueDictResult" class="no-data">Search for a word to see its entry.</p>
+        </div>
+      </section>
+
+      <!-- Favorites -->
+      <section id="page-favorites" class="page">
+        <div class="panel">
+          <h2 data-i18n="favorites.title">Favorites</h2>
+          <div class="favorites-category-bar">
+            <button class="fav-cat-btn active" data-favcat="all" data-i18n="common.all">All</button>
+            <button class="fav-cat-btn" data-favcat="翻译" data-i18n="favorites.filter.translation">Translations</button>
+            <button class="fav-cat-btn" data-favcat="短语" data-i18n="favorites.filter.phrase">Phrases</button>
+            <button class="fav-cat-btn" data-favcat="每日一句" data-i18n="favorites.filter.daily">Phrase of the day</button>
+            <button class="fav-cat-btn" data-favcat="生词" data-i18n="favorites.filter.word">Words</button>
+            <button class="fav-cat-btn" data-favcat="自定义" data-i18n="favorites.filter.custom">Custom</button>
+          </div>
+          <div class="favorites-list">
+            <div id="favoritesList" class="favorites-content"></div>
+            <p id="noFavorites" class="no-data" data-i18n="favorites.empty">Nothing saved yet.</p>
+          </div>
+          <div class="favorites-actions">
+            <button id="clearFavoritesBtn" class="btn secondary" data-i18n="favorites.clear">Clear favorites</button>
+            <button id="shareFavoritesBtn" class="btn" data-i18n="favorites.share">Share favorites</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Phrases -->
+      <section id="page-phrases" class="page">
+        <div class="panel">
+          <h2 id="phrasesTitle">Common phrases</h2>
+          <div class="translate-controls">
+            <label>
+              <span data-i18n="common.dialect">Dialect</span>
+              <select id="phraseDialect" data-dialect-select>
+                <option value="yue">Cantonese</option>
+                <option value="taishanese">Taishanese</option>
+                <option value="minnan">Minnan</option>
+                <option value="hokkien">Hokkien</option>
+                <option value="shanghai">Shanghai dialect</option>
+                <option value="shanghainese">Shanghainese</option>
+                <option value="teochew">Teochew</option>
+                <option value="wenzhounese">Wenzhounese</option>
+                <option value="sichuan">Sichuanese</option>
+              </select>
+            </label>
+          </div>
+          <div class="phrase-categories">
+            <button class="phrase-cat-btn active" data-cat="greeting" data-i18n="phrases.cat.greeting">Greetings</button>
+            <button class="phrase-cat-btn" data-cat="daily" data-i18n="phrases.cat.daily">Daily life</button>
+            <button class="phrase-cat-btn" data-cat="food" data-i18n="phrases.cat.food">Food</button>
+            <button class="phrase-cat-btn" data-cat="shopping" data-i18n="phrases.cat.shopping">Shopping</button>
+            <button class="phrase-cat-btn" data-cat="emotion" data-i18n="phrases.cat.emotion">Feelings</button>
+          </div>
+          <div id="phraseList" class="phrase-list"></div>
+        </div>
+      </section>
+
+      <!-- Phrase of the day -->
+      <section id="page-daily" class="page">
+        <div class="panel">
+          <h2 id="dailyTitle">Phrase of the day</h2>
+          <div class="translate-controls">
+            <label>
+              <span data-i18n="common.dialect">Dialect</span>
+              <select id="dailyDialect" data-dialect-select>
+                <option value="yue">Cantonese</option>
+                <option value="taishanese">Taishanese</option>
+                <option value="minnan">Minnan</option>
+                <option value="hokkien">Hokkien</option>
+                <option value="shanghai">Shanghai dialect</option>
+                <option value="shanghainese">Shanghainese</option>
+                <option value="teochew">Teochew</option>
+                <option value="wenzhounese">Wenzhounese</option>
+                <option value="sichuan">Sichuanese</option>
+              </select>
+            </label>
+          </div>
+          <div id="dailyQuote" class="daily-quote-large">
+            <div class="quote-content">
+              <p class="quote-yue" id="dailyQuoteYue">Loading…</p>
+              <p class="quote-zh" id="dailyQuoteZh"></p>
+              <p class="quote-pinyin" id="dailyQuotePinyin"></p>
+            </div>
+            <div class="quote-actions">
+              <button
+                id="dailyPlayQuoteBtn"
+                class="icon-btn"
+                title="Play pronunciation"
+                aria-label="Play pronunciation"
+                data-i18n="common.play"
+                data-i18n-title="common.playPronunciation"
+                data-i18n-aria-label="common.playPronunciation"
+              >Play</button>
+              <button id="dailyNextQuoteBtn" class="btn" data-i18n="daily.next">Next phrase</button>
+              <button
+                id="dailyFavoriteQuoteBtn"
+                class="icon-btn"
+                title="Save to favorites"
+                aria-label="Save to favorites"
+                data-i18n="common.save"
+                data-i18n-title="common.saveToFavorites"
+                data-i18n-aria-label="common.saveToFavorites"
+              >Save</button>
+            </div>
+          </div>
+          <div class="custom-quote-section">
+            <h3 data-i18n="daily.custom.title">Add your own phrase</h3>
+            <div class="custom-quote-form">
+              <input type="text" id="customQuoteYue" placeholder="Phrase in the dialect" />
+              <input
+                type="text"
+                id="customQuoteZh"
+                placeholder="Mandarin or English meaning"
+                data-i18n-placeholder="daily.custom.meaningPlaceholder"
+              />
+              <input type="text" id="customQuotePinyin" placeholder="Romanization (for example: nei5 hou2)" />
+              <button id="addCustomQuoteBtn" class="btn" data-i18n="common.add">Add</button>
+            </div>
+            <div id="customQuotesList" class="custom-quotes-list"></div>
+          </div>
+          <div class="daily-history">
+            <h3 data-i18n="daily.earlier">Earlier phrases</h3>
+            <div id="dailyHistoryList" class="daily-history-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quiz -->
+      <section id="page-quiz" class="page">
+        <div class="panel">
+          <h2 id="quizTitle">Dialect quiz</h2>
+          <div id="quizContainer" class="quiz-container">
+            <div id="quizStart" class="quiz-start">
+              <p id="quizIntro">Ready to test your dialect?</p>
+              <div class="quiz-options">
+                <select id="quizDialect" data-dialect-select data-i18n-aria-label="common.dialect">
+                  <option value="yue">Cantonese</option>
+                  <option value="taishanese">Taishanese</option>
+                  <option value="minnan">Minnan</option>
+                  <option value="hokkien">Hokkien</option>
+                  <option value="shanghai">Shanghai dialect</option>
+                  <option value="shanghainese">Shanghainese</option>
+                  <option value="teochew">Teochew</option>
+                  <option value="wenzhounese">Wenzhounese</option>
+                  <option value="sichuan">Sichuanese</option>
+                </select>
+                <select id="quizDifficulty" data-i18n-aria-label="quiz.difficulty">
+                  <option value="easy" data-i18n="quiz.difficulty.easy">Easy</option>
+                  <option value="medium" selected data-i18n="quiz.difficulty.medium">Medium</option>
+                  <option value="hard" data-i18n="quiz.difficulty.hard">Hard</option>
+                </select>
+              </div>
+              <div class="quiz-mode-buttons">
+                <button id="startQuizBtn" class="btn" data-i18n="quiz.startBuiltIn">Built-in questions</button>
+                <button id="startAIQuizBtn" class="btn btn-ai" data-i18n="quiz.startAI">AI-made questions</button>
+              </div>
+              <div id="quizScore" class="quiz-score"></div>
+            </div>
+            <div id="quizQuestion" class="quiz-question" style="display: none">
+              <div class="question-header">
+                <span id="questionCounter">Question 1/10</span>
+                <span id="currentScore">Score: 0</span>
+              </div>
+              <h3 id="questionText"></h3>
+              <div id="questionOptions" class="question-options"></div>
+              <div id="questionFeedback" class="question-feedback"></div>
+              <button id="nextQuestionBtn" class="btn" style="display: none" data-i18n="quiz.next">Next question</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tones -->
+      <section id="page-tones" class="page">
+        <div class="panel">
+          <h2 data-i18n="tones.title">Cantonese tones</h2>
+          <div class="tone-intro">
+            <p data-i18n="tones.intro">
+              Cantonese has six basic tones (nine if you count the entering tones). The same syllable means
+              different things in different tones.
+            </p>
+          </div>
+          <div class="tone-visual-chart">
+            <h3 data-i18n="tones.chartTitle">Pitch contours</h3>
+            <canvas id="toneChart" width="500" height="280"></canvas>
+          </div>
+          <div class="tone-grid">
+            <div class="tone-card" data-tone="1">
+              <div class="tone-number">1</div>
+              <div class="tone-name" data-i18n="tone.name.1">High level</div>
+              <div class="tone-example">
+                <div class="yue">诗</div>
+                <div class="pinyin">si1</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si1" aria-label="Play tone 1" data-i18n="common.play" data-i18n-aria-label="tones.play.1">Play</button>
+            </div>
+            <div class="tone-card" data-tone="2">
+              <div class="tone-number">2</div>
+              <div class="tone-name" data-i18n="tone.name.2">High rising</div>
+              <div class="tone-example">
+                <div class="yue">史</div>
+                <div class="pinyin">si2</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si2" aria-label="Play tone 2" data-i18n="common.play" data-i18n-aria-label="tones.play.2">Play</button>
+            </div>
+            <div class="tone-card" data-tone="3">
+              <div class="tone-number">3</div>
+              <div class="tone-name" data-i18n="tone.name.3">Mid level</div>
+              <div class="tone-example">
+                <div class="yue">试</div>
+                <div class="pinyin">si3</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si3" aria-label="Play tone 3" data-i18n="common.play" data-i18n-aria-label="tones.play.3">Play</button>
+            </div>
+            <div class="tone-card" data-tone="4">
+              <div class="tone-number">4</div>
+              <div class="tone-name" data-i18n="tone.name.4">Low falling</div>
+              <div class="tone-example">
+                <div class="yue">时</div>
+                <div class="pinyin">si4</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si4" aria-label="Play tone 4" data-i18n="common.play" data-i18n-aria-label="tones.play.4">Play</button>
+            </div>
+            <div class="tone-card" data-tone="5">
+              <div class="tone-number">5</div>
+              <div class="tone-name" data-i18n="tone.name.5">Low rising</div>
+              <div class="tone-example">
+                <div class="yue">市</div>
+                <div class="pinyin">si5</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si5" aria-label="Play tone 5" data-i18n="common.play" data-i18n-aria-label="tones.play.5">Play</button>
+            </div>
+            <div class="tone-card" data-tone="6">
+              <div class="tone-number">6</div>
+              <div class="tone-name" data-i18n="tone.name.6">Low level</div>
+              <div class="tone-example">
+                <div class="yue">是</div>
+                <div class="pinyin">si6</div>
+              </div>
+              <button class="tone-play-btn" data-pinyin="si6" aria-label="Play tone 6" data-i18n="common.play" data-i18n-aria-label="tones.play.6">Play</button>
+            </div>
+          </div>
+          <div class="tone-practice-section">
+            <h3 data-i18n="tones.drill.title">Tone drill: listen and pick</h3>
+            <div id="tonePracticeGame" class="tone-practice-game">
+              <div class="game-start">
+                <p data-i18n="tones.drill.intro">Listen to the sound, then choose the right tone.</p>
+                <button id="startTonePracticeBtn" class="btn" data-i18n="tones.drill.start">Start drill</button>
+              </div>
+              <div id="toneQuestion" class="tone-question" style="display: none">
+                <div class="tone-question-header">
+                  <span id="toneQuestionCounter">Question 1/10</span>
+                  <span id="toneScore">Score: 0</span>
+                </div>
+                <button id="playToneBtn" class="play-tone-btn" data-i18n="tones.drill.playSound">Play sound</button>
+                <div id="toneOptions" class="tone-options"></div>
+                <div id="toneFeedback" class="tone-feedback"></div>
+                <button id="nextToneBtn" class="btn" style="display: none" data-i18n="quiz.next">Next question</button>
+              </div>
+            </div>
+          </div>
+          <div class="pronunciation-compare-section">
+            <h3 data-i18n="tones.compare.title">Compare your pronunciation</h3>
+            <p data-i18n="tones.compare.intro">Listen to the standard sound, then record yourself to compare.</p>
+            <div class="compare-controls">
+              <div class="compare-item">
+                <span data-i18n="tones.compare.standard">Standard</span>
+                <input
+                  type="text"
+                  id="comparePinyin"
+                  placeholder="Enter Jyutping (for example: nei5 hou2)"
+                  data-i18n-placeholder="tones.compare.placeholder"
+                />
+                <button id="playStandardBtn" class="btn" data-i18n="tones.compare.playStandard">Play standard</button>
+              </div>
+              <div class="compare-item">
+                <span data-i18n="tones.compare.you">You</span>
+                <button id="startRecordBtn" class="btn btn-record" data-i18n="tones.compare.startRecording">Start recording</button>
+                <button id="stopRecordBtn" class="btn btn-stop" style="display: none" data-i18n="tones.compare.stopRecording">Stop recording</button>
+                <button id="playRecordingBtn" class="btn" style="display: none" data-i18n="tones.compare.playRecording">Play recording</button>
+              </div>
+            </div>
+            <div id="compareResult" class="compare-result"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Wordbook -->
+      <section id="page-wordbook" class="page">
+        <div class="panel">
+          <h2 data-i18n="wordbook.title">Wordbook</h2>
+          <div class="wordbook-controls">
+            <div class="wordbook-filter">
+              <button class="wb-filter-btn active" data-wbfilter="all" data-i18n="common.all">All</button>
+              <button class="wb-filter-btn" data-wbfilter="new" data-i18n="wordbook.status.new">New</button>
+              <button class="wb-filter-btn" data-wbfilter="learning" data-i18n="wordbook.status.learning">Learning</button>
+              <button class="wb-filter-btn" data-wbfilter="review" data-i18n="wordbook.status.review">Due for review</button>
+              <button class="wb-filter-btn" data-wbfilter="mastered" data-i18n="wordbook.status.mastered">Mastered</button>
+            </div>
+            <button id="startReviewBtn" class="btn btn-review" data-i18n="wordbook.startReview">Start review</button>
+          </div>
+          <div id="wordbookList" class="wordbook-list"></div>
+          <p id="noWordbook" class="no-data" data-i18n="wordbook.empty">No words yet. Words you look up in the dictionary are added automatically.</p>
+          <div id="reviewModal" class="review-modal" style="display: none">
+            <div class="review-card">
+              <h3 data-i18n="wordbook.review.title">Spaced review</h3>
+              <div id="reviewCardContent" class="review-card-content"></div>
+              <div class="review-card-actions">
+                <button id="reviewForgotBtn" class="btn btn-review-forgot" data-i18n="wordbook.review.forgot">Forgot</button>
+                <button id="reviewVagueBtn" class="btn btn-review-vague" data-i18n="wordbook.review.vague">Fuzzy</button>
+                <button id="reviewRememberBtn" class="btn btn-review-remember" data-i18n="wordbook.review.remember">Remembered</button>
+                <button id="reviewEasyBtn" class="btn btn-review-easy" data-i18n="wordbook.review.easy">Easy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Achievements -->
+      <section id="page-achievement" class="page">
+        <div class="panel">
+          <h2 data-i18n="achievements.title">Achievements</h2>
+          <div class="achievement-level">
+            <div class="level-display">
+              <div class="level-icon" id="levelIcon">始</div>
+              <div class="level-info">
+                <h3 id="levelName">Beginner</h3>
+                <p id="levelDesc">Just starting your dialect journey</p>
+              </div>
+            </div>
+            <div class="level-progress">
+              <div class="level-xp-bar">
+                <div class="level-xp-fill" id="levelXpFill" style="width: 0%"></div>
+              </div>
+              <span id="levelXpText">0 / 100 XP</span>
+            </div>
+          </div>
+          <div class="achievement-badges">
+            <h3 data-i18n="achievements.badges">Badges</h3>
+            <div id="badgeGrid" class="badge-grid"></div>
+          </div>
+          <div class="achievement-share">
+            <button id="shareAchievementBtn" class="btn" data-i18n="achievements.share">Share achievements</button>
+            <button id="exportReportBtn" class="btn secondary" data-i18n="achievements.exportReport">Export learning report</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section id="page-history" class="page">
+        <div class="panel">
+          <h2 data-i18n="history.title">History</h2>
+          <div class="history-controls">
+            <button id="clearChatHistoryBtn" class="btn secondary" data-i18n="history.clearChat">Clear chat history</button>
+            <button id="clearTranslateHistoryBtn" class="btn secondary" data-i18n="history.clearTranslate">Clear translation history</button>
+          </div>
+          <div class="history-list">
+            <h3 data-i18n="history.translateTitle">Translation history</h3>
+            <div id="translateHistoryList" class="history-content"></div>
+            <p id="noTranslateHistory" class="no-data" data-i18n="history.empty">No translations yet.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Log in / Sign up -->
+      <section id="page-auth" class="page">
+        <div class="panel auth-panel">
+          <h2 data-i18n="auth.title">Your account</h2>
+          <p class="auth-hint" data-i18n="auth.hint">Log in to sync your favorites, wordbook and progress.</p>
+          <div class="auth-tabs">
+            <button type="button" id="authTabLogin" class="auth-tab active" data-i18n="auth.login">Log in</button>
+            <button type="button" id="authTabRegister" class="auth-tab" data-i18n="auth.signup">Sign up</button>
+          </div>
+          <p id="authMessage" class="auth-message" hidden></p>
+          <div class="auth-oauth">
+            <button type="button" id="oauthGithubBtn" class="btn btn-oauth" data-i18n="auth.github">Continue with GitHub</button>
+            <div class="auth-divider"><span data-i18n="auth.or">or</span></div>
+          </div>
+          <form id="loginForm" class="auth-form">
+            <label>
+              <span data-i18n="auth.username">Username</span>
+              <input id="loginUsername" type="text" autocomplete="username" placeholder="demo" required />
+            </label>
+            <label>
+              <span data-i18n="auth.password">Password</span>
+              <input id="loginPassword" type="password" autocomplete="current-password" placeholder="demo123" required />
+            </label>
+            <button type="submit" class="btn" data-i18n="auth.login">Log in</button>
+            <small data-i18n="auth.testAccount">Test account: demo / demo123</small>
+          </form>
+          <form id="registerForm" class="auth-form" hidden>
+            <label>
+              <span data-i18n="auth.username">Username</span>
+              <input
+                id="registerUsername"
+                type="text"
+                autocomplete="username"
+                placeholder="3–20 letters, numbers or underscores"
+                data-i18n-placeholder="auth.usernameRule"
+                required
+              />
+            </label>
+            <label>
+              <span data-i18n="auth.displayName">Display name (optional)</span>
+              <input
+                id="registerDisplayName"
+                type="text"
+                autocomplete="nickname"
+                placeholder="How we should greet you"
+                data-i18n-placeholder="auth.displayNamePlaceholder"
+              />
+            </label>
+            <fieldset class="auth-role-fieldset">
+              <legend data-i18n="auth.iAm">I am a…</legend>
+              <div class="auth-role-options">
+                <label class="auth-role-option">
+                  <input type="radio" name="registerRole" value="student" checked required />
+                  <span data-i18n="role.student">Student</span>
+                </label>
+                <label class="auth-role-option">
+                  <input type="radio" name="registerRole" value="parent" required />
+                  <span data-i18n="role.parent">Parent</span>
+                </label>
+                <label class="auth-role-option">
+                  <input type="radio" name="registerRole" value="teacher" required />
+                  <span data-i18n="role.teacher">Teacher</span>
+                </label>
+              </div>
+              <small data-i18n="auth.adminNote">Admin accounts are set up by the system and cannot be created here.</small>
+            </fieldset>
+            <label>
+              <span data-i18n="auth.password">Password</span>
+              <input
+                id="registerPassword"
+                type="password"
+                autocomplete="new-password"
+                placeholder="At least 6 characters"
+                data-i18n-placeholder="auth.passwordRule"
+                required
+              />
+            </label>
+            <label>
+              <span data-i18n="auth.confirmPassword">Confirm password</span>
+              <input id="registerPassword2" type="password" autocomplete="new-password" required />
+            </label>
+            <button type="submit" class="btn" data-i18n="auth.signup">Sign up</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Role workspace -->
+      <section id="page-workspace" class="page">
+        <div class="panel workspace-panel">
+          <h2 id="roleWorkspaceTitle" data-i18n="workspace.nav.student">Learning center</h2>
+          <p class="auth-hint" data-i18n="workspace.hint">Tools for learning, supervising, teaching and managing, depending on your role.</p>
+          <div id="roleWorkspaceContent" class="role-workspace-content">
+            <p class="ws-muted" data-i18n="common.loading">Loading…</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section id="page-settings" class="page">
+        <div class="panel config-panel">
+          <h2 data-i18n="settings.title">Tutor model</h2>
+          <div class="grid">
+            <label>
+              <span data-i18n="settings.connection">Connection</span>
+              <select id="providerPreset">
+                <option value="ollama" data-i18n="settings.provider.ollama">Local Ollama</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="openai" data-i18n="settings.provider.openai">OpenAI / compatible API</option>
+              </select>
+            </label>
+            <label class="config-file-label">
+              <span data-i18n="settings.configFile">API config file</span>
+              <div class="config-file-row">
+                <button type="button" id="uploadConfigBtn" class="btn secondary" data-i18n="settings.uploadConfig">Upload config file</button>
+                <button type="button" id="clearConfigKeyBtn" class="btn secondary" data-i18n="settings.clearKey">Clear key</button>
+                <button type="button" id="downloadConfigTemplateBtn" class="btn secondary" data-i18n="settings.downloadTemplate">Download template</button>
+                <input type="file" id="configFileInput" accept=".json,application/json" hidden />
+              </div>
+              <span id="configKeyStatus" class="config-key-status">No API key set</span>
+            </label>
+            <label>
+              Base URL
+              <input
+                id="baseUrl"
+                type="text"
+                value="/api"
+                placeholder="/api, http://127.0.0.1:11434 or https://api.deepseek.com/v1"
+                data-i18n-placeholder="settings.baseUrlPlaceholder"
+              />
+            </label>
+            <label>
+              <span data-i18n="settings.model">Model</span>
+              <div class="model-select-row">
+                <input id="model" type="text" value="qwen3.5:0.8b" placeholder="qwen3.5:0.8b" />
+                <select id="modelPreset">
+                  <option value="" data-i18n="settings.recommendedModels">Recommended models</option>
+                  <option value="qwen3.5:0.8b" data-i18n="settings.modelOption.qwen35_08b">qwen3.5:0.8b (recommended, light)</option>
+                  <option value="qwen2.5:0.5b" data-i18n="settings.modelOption.qwen25_05b">qwen2.5:0.5b (smallest, low memory)</option>
+                  <option value="qwen2.5:1.5b" data-i18n="settings.modelOption.qwen25_15b">qwen2.5:1.5b (small)</option>
+                  <option value="qwen2.5:3b" data-i18n="settings.modelOption.qwen25_3b">qwen2.5:3b (medium)</option>
+                  <option value="qwen2.5:7b" data-i18n="settings.modelOption.qwen25_7b">qwen2.5:7b (large)</option>
+                  <option value="gemma3:1b" data-i18n="settings.modelOption.gemma3_1b">gemma3:1b (Google, light)</option>
+                  <option value="gemma3:4b" data-i18n="settings.modelOption.gemma3_4b">gemma3:4b (Google, medium)</option>
+                  <option value="llama3.2:1b" data-i18n="settings.modelOption.llama32_1b">llama3.2:1b (Meta, light)</option>
+                  <option value="llama3.2:3b" data-i18n="settings.modelOption.llama32_3b">llama3.2:3b (Meta, medium)</option>
+                  <option value="phi4-mini" data-i18n="settings.modelOption.phi4mini">phi4-mini (Microsoft, light)</option>
+                  <option value="deepseek-chat">deepseek-chat (DeepSeek V3)</option>
+                  <option value="deepseek-reasoner">deepseek-reasoner (DeepSeek R1)</option>
+                </select>
+              </div>
+            </label>
+          </div>
+          <button id="saveConfig" class="btn" data-i18n="settings.save">Save settings</button>
+          <small data-i18n-html="settings.helpHtml">
+            Run <code>node server.js</code> first and use <code>/api</code>. To talk to Ollama directly, use
+            <code>http://127.0.0.1:11434</code>. For DeepSeek, use <code>https://api.deepseek.com/v1</code> and upload a
+            JSON config file that contains your API key. Settings are stored only in this browser.
+          </small>
+          <div class="model-guide">
+            <h3 id="modelGuideTitle">Download a model</h3>
+            <p id="modelGuideHint">Run this command in a terminal:</p>
+            <div class="guide-code">
+              <code id="modelDownloadCmd">ollama pull qwen3.5:0.8b</code>
+              <button class="btn btn-sm" onclick="copyModelCmd()" data-i18n="common.copy">Copy</button>
+            </div>
+            <p data-i18n="settings.guide.otherCommands">Other handy commands:</p>
+            <div class="guide-code-list">
+              <div class="guide-code"><code>ollama list</code><span data-i18n="settings.guide.list">See installed models</span></div>
+              <div class="guide-code"><code>ollama rm MODEL</code><span data-i18n="settings.guide.rm">Remove a model</span></div>
+              <div class="guide-code"><code>ollama serve</code><span data-i18n="settings.guide.serve">Start the Ollama service</span></div>
+            </div>
+            <p data-i18n="settings.guide.memory">Memory guide: 0.5b ≈ 512 MB | 1.5b ≈ 1.5 GB | 3b ≈ 2.5 GB | 7b ≈ 5 GB</p>
+          </div>
+          <div class="data-management">
+            <h3 data-i18n="settings.data.title">Your data</h3>
+            <div class="data-actions">
+              <button id="exportAllDataBtn" class="btn" data-i18n="settings.data.export">Export all data</button>
+              <button id="importDataBtn" class="btn secondary" data-i18n="settings.data.import">Import data</button>
+              <input type="file" id="importDataFile" accept=".json" style="display: none" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div
+      id="onboardingModal"
+      class="onboarding-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboardingTitle"
+      hidden
+    >
+      <div class="onboarding-card">
+        <div class="onboarding-header">
+          <span class="onboarding-badge" data-i18n="onboarding.badge">Quick tour</span>
+          <button type="button" id="skipOnboardingBtn" class="onboarding-skip" data-i18n="onboarding.skip">Skip</button>
+        </div>
+        <div class="onboarding-step" data-onboarding-step="0">
+          <div class="onboarding-icon">家</div>
+          <h2 id="onboardingTitle" data-i18n="onboarding.step0.title">Welcome to Duolingsheng</h2>
+          <p data-i18n="onboarding.step0.body">Learn the dialect you care about step by step, through chat, translation and practice.</p>
+        </div>
+        <div class="onboarding-step" data-onboarding-step="1" hidden>
+          <div class="onboarding-icon">设</div>
+          <h2 data-i18n="onboarding.step1.title">First, connect a model</h2>
+          <p data-i18n="onboarding.step1.body">
+            Open Settings and choose a provider, a model and a connection address. With local Ollama, pick a model
+            you have already installed.
+          </p>
+        </div>
+        <div class="onboarding-step" data-onboarding-step="2" hidden>
+          <div class="onboarding-icon">谈</div>
+          <h2 data-i18n="onboarding.step2.title">Start with one question</h2>
+          <p data-i18n="onboarding.step2.body">
+            Try “How do I say hello in Cantonese?” The tutor looks words up in the dictionary when it needs to and
+            suggests what to learn next.
+          </p>
+        </div>
+        <div class="onboarding-progress" aria-label="Tour progress" data-i18n-aria-label="onboarding.progress">
+          <span class="active"></span><span></span><span></span>
+        </div>
+        <div class="onboarding-actions">
+          <button type="button" id="onboardingBackBtn" class="btn secondary" hidden data-i18n="common.back">Back</button>
+          <button type="button" id="onboardingNextBtn" class="btn" data-i18n="common.next">Next</button>
+        </div>
+      </div>
+    </div>
+    <script src="./locales/en-US.js"></script>
+    <script src="./locales/zh-CN.js"></script>
+    <script src="./locales/es.js"></script>
+    <script src="./locales/ja.js"></script>
+    <script src="./i18n.js"></script>
+    <script src="./auth.js"></script>
+    <script src="./markdown.js"></script>
+    <script src="./app.js?v=20261029-i18n"></script>
+    <script src="./role-features.js"></script>
+  </body>
+</html>
